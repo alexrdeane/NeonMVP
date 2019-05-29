@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAnim : MonoBehaviour {
+public class PlayerAnim : MonoBehaviour
+{
+    public Animator anim;
 
-	public Animator anim;
-	// Start is called before the first frame update
-	void Start() {
+    void Start()
+    {
+
+    }
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            anim.SetBool("isPunching", true);
         }
-    // Update is called once per frame
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.A)) {
-		anim.SetTrigger("isPunching");
-	}
+        else if (Input.GetKeyUp(KeyCode.A))
+        {
+            anim.SetBool("isPunching", false);
+        }
     }
 }

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1279,10 +1279,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 209895839}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6cd2fe54c057b904083f251b7cf9b99d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5b886c9a1527b094ab825e05f0671294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightKey: 97
+  mediumKey: 115
+  heavyKey: 100
+  lightAttack:
+    length: 1
+    name: lightPunch
+  mediumAttack:
+    length: 0.792
+    name: kick
+  heavyAttack:
+    length: 0.792
+    name: kick
+  combos: []
+  comboLeeway: 0.2
   anim: {fileID: 202617813}
+  skip: 0
 --- !u!1 &209895841
 GameObject:
   m_ObjectHideFlags: 0
