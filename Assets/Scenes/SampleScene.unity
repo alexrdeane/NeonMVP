@@ -1283,9 +1283,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adeda658707eef42bc8c701eaee1067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forwardKey: 275
+  backKey: 276
+  isMoving: 0
+  characterController: {fileID: 209895844}
   lightKey: 97
   mediumKey: 115
   heavyKey: 100
+  upKey: 0
+  downKey: 0
   lightAttack:
     length: 0.625
     name: punchLeftArm
@@ -1310,14 +1316,7 @@ MonoBehaviour:
         Culture=neutral, PublicKeyToken=null
   comboLeeway: 0.25
   anim: {fileID: 202617813}
-  forwardKey: 275
-  backKey: 276
-  isMoving: 0
-  moveDirection: {x: 0, y: 0, z: 0}
-  characterController: {fileID: 209895844}
-  jumpSpeed: 5
-  speed: 1
-  gravity: 20
+  skip: 0
 --- !u!1 &209895841
 GameObject:
   m_ObjectHideFlags: 0

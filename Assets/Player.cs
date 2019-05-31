@@ -5,14 +5,29 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
+    #region movementVariables
+    public KeyCode forwardKey;
+    public KeyCode backKey;
+    public bool isMoving;
+
+    private Vector3 moveDirection;
+    public CharacterController characterController;
+
+    private float jumpSpeed = 5f;
+    private float speed = 1f, gravity = 20f;
+    #endregion
+
     #region combatVariables
     public KeyCode lightKey;
     public KeyCode mediumKey;
     public KeyCode heavyKey;
+    public KeyCode upKey;
+    public KeyCode downKey;
 
     public Attack lightAttack;
     public Attack mediumAttack;
     public Attack heavyAttack;
+
     public List<Combo> combos;
     public float comboLeeway = 0.2f;
     private float leeway = 0;
@@ -22,19 +37,7 @@ public class Player : MonoBehaviour
     private float timer = 0;
     ComboInput lastInput = null;
     List<int> currentCombos = new List<int>();
-    #endregion
-
-    #region movementVariables
-    public KeyCode forwardKey;
-    public KeyCode backKey;
-    public bool isMoving;
-
-    public Vector3 moveDirection;
-    public CharacterController characterController;
-
-    public float jumpSpeed = 5f;
-    public float speed = 1f, gravity = 20f;
-
+    public bool skip = false;
     #endregion
 
     void Start()
@@ -51,6 +54,7 @@ public class Player : MonoBehaviour
             Combo combo = combos[i];
             combo.onInputted.AddListener(() =>
             {
+                skip = true;
                 Attack(combo.comboAttack);
                 ResetCombos();
             });
@@ -71,13 +75,13 @@ public class Player : MonoBehaviour
             moveDirection.y = jumpSpeed;
         }
 
-        if (Input.GetKey(forwardKey))
+        if (Input.GetKey(backKey) || Input.GetKey(forwardKey))
         {
-            anim.SetBool("isWalking", true);
+            isMoving = true;
         }
         else
         {
-            anim.SetBool("isWalking", false);
+            isMoving = false;
         }
 
         if (Input.GetKey(backKey))
@@ -87,6 +91,15 @@ public class Player : MonoBehaviour
         else
         {
             anim.SetBool("isBack", false);
+        }
+
+        if (Input.GetKey(forwardKey))
+        {
+            anim.SetBool("isWalking", true);
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
         }
 
         if (curAttack != null)
@@ -126,7 +139,6 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(heavyKey))
             input = new ComboInput(AttackType.heavy);
 
-
         if (input == null) return;
         lastInput = input;
 
@@ -142,7 +154,12 @@ public class Player : MonoBehaviour
             {
                 remove.Add(i);
             }
+        }
 
+        if (skip)
+        {
+            skip = false;
+            return;
         }
 
         for (int i = 0; i < combos.Count; i++)
