@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class FightingCombo : MonoBehaviour
+public class Player : MonoBehaviour
 {
+    #region combatVariables
     public KeyCode lightKey;
     public KeyCode mediumKey;
     public KeyCode heavyKey;
-
-    public KeyCode forwardKey;
-    public KeyCode backKey;
 
     public Attack lightAttack;
     public Attack mediumAttack;
@@ -24,10 +22,25 @@ public class FightingCombo : MonoBehaviour
     private float timer = 0;
     ComboInput lastInput = null;
     List<int> currentCombos = new List<int>();
+    #endregion
+
+    #region movementVariables
+    public KeyCode forwardKey;
+    public KeyCode backKey;
+    public bool isMoving;
+
+    public Vector3 moveDirection;
+    public CharacterController characterController;
+
+    public float jumpSpeed = 5f;
+    public float speed = 1f, gravity = 20f;
+
+    #endregion
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        characterController = GetComponent<CharacterController>();
         PrimeCombos();
     }
 
@@ -46,6 +59,17 @@ public class FightingCombo : MonoBehaviour
 
     void Update()
     {
+        moveDirection = new Vector3(0, 0, Input.GetAxis("Horizontal"));
+        moveDirection = transform.TransformDirection(moveDirection);
+        moveDirection *= speed;
+
+        moveDirection.y -= gravity * Time.deltaTime;
+        characterController.Move(moveDirection * Time.deltaTime);
+
+        if (Input.GetButton("Jump"))
+        {
+            moveDirection.y = jumpSpeed;
+        }
 
         if (Input.GetKey(forwardKey))
         {
@@ -104,7 +128,7 @@ public class FightingCombo : MonoBehaviour
 
 
         if (input == null) return;
-            lastInput = input;
+        lastInput = input;
 
         List<int> remove = new List<int>();
         for (int i = 0; i < currentCombos.Count; i++)
@@ -136,7 +160,7 @@ public class FightingCombo : MonoBehaviour
 
         if (currentCombos.Count <= 0)
             Attack(getAttackFromType(input.type));
- 
+
     }
 
     void ResetCombos()
