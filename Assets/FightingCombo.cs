@@ -9,6 +9,9 @@ public class FightingCombo : MonoBehaviour
     public KeyCode mediumKey;
     public KeyCode heavyKey;
 
+    public KeyCode forwardKey;
+    public KeyCode backKey;
+
     public Attack lightAttack;
     public Attack mediumAttack;
     public Attack heavyAttack;
@@ -21,7 +24,6 @@ public class FightingCombo : MonoBehaviour
     private float timer = 0;
     ComboInput lastInput = null;
     List<int> currentCombos = new List<int>();
-    public bool skip = false;
 
     void Start()
     {
@@ -36,7 +38,6 @@ public class FightingCombo : MonoBehaviour
             Combo combo = combos[i];
             combo.onInputted.AddListener(() =>
             {
-                skip = true;
                 Attack(combo.comboAttack);
                 ResetCombos();
             });
@@ -45,6 +46,25 @@ public class FightingCombo : MonoBehaviour
 
     void Update()
     {
+
+        if (Input.GetKey(forwardKey))
+        {
+            anim.SetBool("isWalking", true);
+        }
+        else
+        {
+            anim.SetBool("isWalking", false);
+        }
+
+        if (Input.GetKey(backKey))
+        {
+            anim.SetBool("isBack", true);
+        }
+        else
+        {
+            anim.SetBool("isBack", false);
+        }
+
         if (curAttack != null)
         {
             if (timer > 0)
@@ -65,7 +85,6 @@ public class FightingCombo : MonoBehaviour
             {
                 if (lastInput != null)
                 {
-                    skip = true;
                     Attack(getAttackFromType(lastInput.type));
                     lastInput = null;
                 }
@@ -100,12 +119,6 @@ public class FightingCombo : MonoBehaviour
                 remove.Add(i);
             }
 
-        }
-
-        if (skip)
-        {
-            skip = false;
-            return;
         }
 
         for (int i = 0; i < combos.Count; i++)
