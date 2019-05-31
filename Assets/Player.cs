@@ -63,18 +63,22 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        //when the key assigned for vertical movement in the input manager is pushed times speed and moveDirection together
         moveDirection = new Vector3(0, 0, Input.GetAxis("Horizontal"));
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
-
+        //gravity is constantly being added to the player
         moveDirection.y -= gravity * Time.deltaTime;
+        //character speed is based on time
         characterController.Move(moveDirection * Time.deltaTime);
 
+        //input controls for jump
         if (Input.GetButton("Jump"))
         {
             moveDirection.y = jumpSpeed;
         }
 
+        
         if (Input.GetKey(backKey) || Input.GetKey(forwardKey))
         {
             isMoving = true;
@@ -156,6 +160,7 @@ public class Player : MonoBehaviour
             }
         }
 
+        //skips a frame after a combo to reset the combo count to stop an extra action after a combo
         if (skip)
         {
             skip = false;
@@ -182,6 +187,7 @@ public class Player : MonoBehaviour
 
     void ResetCombos()
     {
+        //resets the leeway timer when a combo is attempted
         leeway = 0;
         for (int i = 0; i < currentCombos.Count; i++)
         {
@@ -214,6 +220,7 @@ public class Player : MonoBehaviour
 [System.Serializable]
 public class Attack
 {
+    //name of animation and time of animation so that  the animator can find it automatically
     public float length;
     public string name;
 }
@@ -269,4 +276,5 @@ public class Combo
         curInput = 0;
     }
 }
+//enum of attack types
 public enum AttackType { light = 0, medium = 1, heavy = 2 };
