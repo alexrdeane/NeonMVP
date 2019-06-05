@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     private Vector3 moveDirection;
     public CharacterController characterController;
-
     private float jumpSpeed = 5f;
     private float speed = 1f, gravity = 20f;
     #endregion
@@ -38,13 +37,17 @@ public class Player : MonoBehaviour
     ComboInput lastInput = null;
     List<int> currentCombos = new List<int>();
     public bool skip = false;
+
+    public Collider[] hurtBoxes;
     #endregion
 
     void Start()
     {
+
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         PrimeCombos();
+
     }
 
     void PrimeCombos()
@@ -78,7 +81,7 @@ public class Player : MonoBehaviour
             moveDirection.y = jumpSpeed;
         }
 
-        
+        //sets isMoving to true
         if (Input.GetKey(backKey) || Input.GetKey(forwardKey))
         {
             isMoving = true;
@@ -88,6 +91,7 @@ public class Player : MonoBehaviour
             isMoving = false;
         }
 
+        //movement controls for player
         if (Input.GetKey(backKey))
         {
             anim.SetBool("isBack", true);
@@ -106,6 +110,7 @@ public class Player : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
 
+        //forgets key if too slow
         if (curAttack != null)
         {
             if (timer > 0)
@@ -119,6 +124,7 @@ public class Player : MonoBehaviour
             return;
         }
 
+        //if combo is done to slow play the last input as an attack
         if (currentCombos.Count > 0)
         {
             leeway += Time.deltaTime;
@@ -167,6 +173,7 @@ public class Player : MonoBehaviour
             return;
         }
 
+        //if combo exists inputs will be used to preform the combo
         for (int i = 0; i < combos.Count; i++)
         {
             if (currentCombos.Contains(i)) continue;
@@ -185,6 +192,7 @@ public class Player : MonoBehaviour
 
     }
 
+    //after a combo is pressed it removes it from active
     void ResetCombos()
     {
         //resets the leeway timer when a combo is attempted
@@ -198,6 +206,7 @@ public class Player : MonoBehaviour
         currentCombos.Clear();
     }
 
+    //plays attack
     void Attack(Attack attack)
     {
         curAttack = attack;
@@ -247,6 +256,7 @@ public class Combo
     public UnityEvent onInputted;
     int curInput = 0;
 
+    //continue combo if correctly inputted
     public bool continueCombo(ComboInput i)
     {
         if (Inputs[curInput].isSameAs(i))
@@ -265,12 +275,14 @@ public class Combo
             return false;
         }
     }
+    //
     public ComboInput currentComboInput()
     {
         if (curInput >= Inputs.Count) return null;
         return Inputs[curInput];
     }
 
+    //resets input of current input after a combo is completed
     public void ResetCombo()
     {
         curInput = 0;
