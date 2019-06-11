@@ -1,4 +1,4 @@
-﻿ using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,20 +8,21 @@ public class Player : MonoBehaviour
     #region movementVariables
     public KeyCode forwardKey;
     public KeyCode backKey;
-    public bool isMoving;
+    public PlayerNum playerNum;
 
     private Vector3 moveDirection;
     public CharacterController characterController;
     private float jumpSpeed = 5f;
     private float speed = 1f, gravity = 20f;
+
+    public Transform player;
+    public Transform player2;
     #endregion
 
     #region combatVariables
     public KeyCode lightKey;
     public KeyCode mediumKey;
     public KeyCode heavyKey;
-    public KeyCode upKey;
-    public KeyCode downKey;
 
     public Attack lightAttack;
     public Attack mediumAttack;
@@ -43,7 +44,6 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         PrimeCombos();
@@ -66,29 +66,21 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        bool notFlipped = transform.position.x < player2.position.x;
+        transform.rotation = notFlipped ? Quaternion.Euler(0f, 90f, 0f) : Quaternion.Euler(0f, 270f, 0f);
         //when the key assigned for vertical movement in the input manager is pushed times speed and moveDirection together
         moveDirection = new Vector3(0, 0, Input.GetAxis("Horizontal"));
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
         //gravity is constantly being added to the player
-        moveDirection.y -= gravity * Time.deltaTime;
+        moveDirection.y -= notFlipped ? gravity : -gravity * Time.deltaTime;
         //character speed is based on time
-        characterController.Move(moveDirection * Time.deltaTime);
+        characterController.Move( (transform.position.x < player2.position.x ? moveDirection : -moveDirection) * Time.deltaTime);
 
         //input controls for jump
         if (Input.GetButton("Jump"))
         {
             moveDirection.y = jumpSpeed;
-        }
-
-        //sets isMoving to true
-        if (Input.GetKey(backKey) || Input.GetKey(forwardKey))
-        {
-            isMoving = true;
-        }
-        else
-        {
-            isMoving = false;
         }
 
         //movement controls for player
@@ -108,6 +100,11 @@ public class Player : MonoBehaviour
         else
         {
             anim.SetBool("isWalking", false);
+        }
+
+        if (timer <= 0.5f)
+        {
+            hurtBoxes[0].enabled = true;
         }
 
         //forgets key if too slow
@@ -188,7 +185,24 @@ public class Player : MonoBehaviour
             currentCombos.RemoveAt(i);
 
         if (currentCombos.Count <= 0)
+        {
             Attack(getAttackFromType(input.type));
+
+        }
+
+        if (playerNum == PlayerNum.player1)
+        {
+            if (characterController.isGrounded)
+            {
+            }
+        }
+        else if (playerNum == PlayerNum.player2)
+        {
+            if (characterController.isGrounded)
+            {
+                player2.rotation = player2.position.x > player.position.x ? Quaternion.Euler(0f, 90f, 0f) : Quaternion.Euler(0f, 270f, 0f);
+            }
+        }
 
     }
 
@@ -221,8 +235,8 @@ public class Player : MonoBehaviour
         if (t == AttackType.medium)
             return mediumAttack;
         if (t == AttackType.heavy)
-            return heavyAttack;
-        return null;
+            hurtBoxes[0].enabled = false;
+        return heavyAttack;
     }
 }
 
@@ -275,7 +289,6 @@ public class Combo
             return false;
         }
     }
-    //
     public ComboInput currentComboInput()
     {
         if (curInput >= Inputs.Count) return null;
@@ -290,3 +303,8 @@ public class Combo
 }
 //enum of attack types
 public enum AttackType { light = 0, medium = 1, heavy = 2 };
+public enum PlayerNum
+{
+    player1,
+    player2
+}
