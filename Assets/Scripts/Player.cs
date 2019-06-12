@@ -29,14 +29,16 @@ public class Player : MonoBehaviour
     public Attack heavyAttack;
 
     public List<Combo> combos;
-    public float comboLeeway = 0.2f;
-    private float leeway = 0;
+    public float maxComboLeeway = 0.2f;
+    private float comboLeeway = 0;
 
     public Animator anim;
-    Attack curAttack = null;
-    private float timer = 0;
-    ComboInput lastInput = null;
-    List<int> currentCombos = new List<int>();
+    private Attack currentAttack = null;
+    private Attack prevAttack = null;
+    private float attackTimer = 0;
+    private float comboTimer = 0;
+    //List<int> currentCombos = new List<int>();
+    private int currentCombo = -1; // -1 Represents no combo
     public bool skip = false;
 
     public Collider[] hurtBoxes;
@@ -47,18 +49,17 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         PrimeCombos();
-
     }
 
     void PrimeCombos()
     {
-        for (int i = 0; i < combos.Count; i++)
+        // Loop through all combos
+        foreach (var combo in combos)
         {
-            Combo combo = combos[i];
             combo.onInputted.AddListener(() =>
             {
                 skip = true;
-                Attack(combo.comboAttack);
+                Combo(combo);
                 ResetCombos();
             });
         }
@@ -75,7 +76,7 @@ public class Player : MonoBehaviour
         //gravity is constantly being added to the player
         moveDirection.y -= notFlipped ? gravity : -gravity * Time.deltaTime;
         //character speed is based on time
-        characterController.Move( (transform.position.x < player2.position.x ? moveDirection : -moveDirection) * Time.deltaTime);
+        characterController.Move((transform.position.x < player2.position.x ? moveDirection : -moveDirection) * Time.deltaTime);
 
         //input controls for jump
         if (Input.GetButton("Jump"))
@@ -102,142 +103,163 @@ public class Player : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
 
-        if (timer <= 0.5f)
+        if (attackTimer <= 0.5f)
         {
             hurtBoxes[0].enabled = true;
         }
 
-        //forgets key if too slow
-        if (curAttack != null)
+        // If there isn't currently an attack running
+        if (currentAttack == null)
         {
-            if (timer > 0)
+            Attack inputAttack = null;
+            if (Input.GetKeyDown(lightKey))
+                inputAttack = lightAttack;
+            if (Input.GetKeyDown(mediumKey))
+                inputAttack = mediumAttack;
+            if (Input.GetKeyDown(heavyKey))
+                inputAttack = heavyAttack;
+
+            if (inputAttack != null)
             {
-                timer -= Time.deltaTime;
-            }
-            else
-            {
-                curAttack = null;
+                Attack(inputAttack);
+                attackTimer = 0f;
+
+                // Loop through all created combos
+                foreach (var combo in combos)
+                {
+                    // If input attack maches the combo's required attack
+                    if (combo.ContinueCombo(currentAttack))
+                    {
+                        // Reset timer
+                        comboLeeway = 0;
+                    }
+                }
             }
             return;
         }
-
-        //if combo is done to slow play the last input as an attack
-        if (currentCombos.Count > 0)
+        else
         {
-            leeway += Time.deltaTime;
-            if (leeway >= comboLeeway)
+            attackTimer += Time.deltaTime;
+            if (attackTimer >= currentAttack.length)
             {
-                if (lastInput != null)
-                {
-                    Attack(getAttackFromType(lastInput.type));
-                    lastInput = null;
-                }
+                currentAttack = null;
+                attackTimer = 0f;
+            }
+        }
+
+        prevAttack = currentAttack;
+
+        // If a current combo has been detected
+        if (currentCombo >= 0)
+        {
+            // Increase combo leeway timer
+            comboLeeway += Time.deltaTime;
+            // If combo leeway reaches max combo leeway
+            if (comboLeeway >= maxComboLeeway)
+            {
+                // Reset the combos
                 ResetCombos();
             }
         }
         else
-            leeway = 0;
-
-        ComboInput input = null;
-        if (Input.GetKeyDown(lightKey))
-            input = new ComboInput(AttackType.light);
-        if (Input.GetKeyDown(mediumKey))
-            input = new ComboInput(AttackType.medium);
-        if (Input.GetKeyDown(heavyKey))
-            input = new ComboInput(AttackType.heavy);
-
-        if (input == null) return;
-        lastInput = input;
-
-        List<int> remove = new List<int>();
-        for (int i = 0; i < currentCombos.Count; i++)
         {
-            Combo combo = combos[currentCombos[i]];
-            if (combo.continueCombo(input))
-            {
-                leeway = 0;
-            }
-            else
-            {
-                remove.Add(i);
-            }
+            comboLeeway = 0;
         }
 
-        //skips a frame after a combo to reset the combo count to stop an extra action after a combo
+        /*
+        //// Loop through all combos and reset them before detecting new combos
+        //List<int> remove = new List<int>();
+        //for (int i = 0; i < combos.Count; i++)
+        //{
+        //    Combo combo = combos[i];
+        //    if (combo.ContinueCombo(input))
+        //    {
+        //        comboLeeway = 0;
+        //    }
+        //    else
+        //    {
+        //        remove.Add(i);
+        //    }
+        //}
+        */
+
+        // Skips a frame after a combo to reset the combo count to stop an extra action after a combo
         if (skip)
         {
             skip = false;
             return;
         }
 
-        //if combo exists inputs will be used to preform the combo
-        for (int i = 0; i < combos.Count; i++)
+
+        /*
+        ////if combo exists inputs will be used to preform the combo
+        //for (int i = 0; i < combos.Count; i++)
+        //{
+        //    if (currentCombos.Contains(i)) continue;
+        //    if (combos[i].ContinueCombo(input))
+        //    {
+        //        currentCombos.Add(i);
+        //        comboLeeway = 0;
+        //    }
+        //}
+        //foreach (int i in remove)
+        //{
+        //    combos.RemoveAt(i);
+        //}
+        */
+
+        // If a combo has been detected
+        if (currentCombo >= 0)
         {
-            if (currentCombos.Contains(i)) continue;
-            if (combos[i].continueCombo(input))
-            {
-                currentCombos.Add(i);
-                leeway = 0;
-            }
+            // Run the Attack (from before)
+            // Attack(currentAttack);
         }
-
-        foreach (int i in remove)
-            currentCombos.RemoveAt(i);
-
-        if (currentCombos.Count <= 0)
-        {
-            Attack(getAttackFromType(input.type));
-
-        }
-
-        if (playerNum == PlayerNum.player1)
-        {
-            if (characterController.isGrounded)
-            {
-            }
-        }
-        else if (playerNum == PlayerNum.player2)
-        {
-            if (characterController.isGrounded)
-            {
-                player2.rotation = player2.position.x > player.position.x ? Quaternion.Euler(0f, 90f, 0f) : Quaternion.Euler(0f, 270f, 0f);
-            }
-        }
-
     }
 
     //after a combo is pressed it removes it from active
     void ResetCombos()
     {
         //resets the leeway timer when a combo is attempted
-        leeway = 0;
-        for (int i = 0; i < currentCombos.Count; i++)
-        {
-            Combo c = combos[currentCombos[i]];
-            c.ResetCombo();
-        }
+        comboLeeway = 0;
+        attackTimer = 0;
 
-        currentCombos.Clear();
+        // Loop through all the combos
+        foreach (var combo in combos)
+        {
+            // Reset each combo
+            combo.ResetCombo();
+        }
     }
 
-    //plays attack
+    // Plays the attack
     void Attack(Attack attack)
     {
-        curAttack = attack;
-        timer = attack.length;
-        anim.Play(attack.name, -1, 0);
+        currentAttack = attack;
+        anim.SetTrigger("Attack");
+
+        // Convert enum to int (type-casting)
+        anim.SetInteger("AttackType", (int)attack.type);
     }
 
-    Attack getAttackFromType(AttackType t)
+    void Combo(Combo combo)
     {
-        if (t == AttackType.light)
-            return lightAttack;
-        if (t == AttackType.medium)
-            return mediumAttack;
-        if (t == AttackType.heavy)
-            hurtBoxes[0].enabled = false;
-        return heavyAttack;
+        comboTimer = combo.length;
+        anim.SetTrigger("Combo");
+
+        // Convert enum to int (type-casting)
+        anim.SetInteger("ComboType", 0);
     }
+
+    //Attack GetAttackFromType(AttackType type)
+    //{
+    //    if (type == AttackType.Light)
+    //        return lightAttack;
+    //    if (type == AttackType.Medium)
+    //        return mediumAttack;
+    //    if (type == AttackType.Heavy)
+    //        hurtBoxes[0].enabled = false;
+    //    return heavyAttack;
+    //}
 }
 
 [System.Serializable]
@@ -245,66 +267,63 @@ public class Attack
 {
     //name of animation and time of animation so that  the animator can find it automatically
     public float length;
-    public string name;
-}
-
-[System.Serializable]
-public class ComboInput
-{
     public AttackType type;
-    public ComboInput(AttackType t)
-    {
-        type = t;
-    }
-    public bool isSameAs(ComboInput test)
-    {
-        return (type == test.type);
-    }
 }
 
 [System.Serializable]
 public class Combo
 {
-    public List<ComboInput> Inputs;
-    public Attack comboAttack;
+    public string name;
+    public float length = 0.7f;
+    public List<Attack> attacks;
     public UnityEvent onInputted;
-    int curInput = 0;
+    private int currentAttackIndex = 0;
 
     //continue combo if correctly inputted
-    public bool continueCombo(ComboInput i)
+    public bool ContinueCombo(Attack currentAttack)
     {
-        if (Inputs[curInput].isSameAs(i))
+        // If Combo's required attack matches the current input attack
+        if (attacks[currentAttackIndex].type == currentAttack.type)
         {
-            curInput++;
-            if (curInput >= Inputs.Count)
+            // 
+            currentAttackIndex++;
+            if (currentAttackIndex >= attacks.Count)
             {
                 onInputted.Invoke();
-                curInput = 0;
+                currentAttackIndex = 0;
             }
             return true;
         }
         else
         {
-            curInput = 0;
+            currentAttackIndex = 0;
             return false;
         }
     }
-    public ComboInput currentComboInput()
+    public AttackType CurrentComboInput()
     {
-        if (curInput >= Inputs.Count) return null;
-        return Inputs[curInput];
+        if (currentAttackIndex >= attacks.Count) return AttackType.Error;
+        return attacks[currentAttackIndex].type;
     }
 
     //resets input of current input after a combo is completed
     public void ResetCombo()
     {
-        curInput = 0;
+        currentAttackIndex = 0;
     }
 }
+
 //enum of attack types
-public enum AttackType { light = 0, medium = 1, heavy = 2 };
+public enum AttackType
+{
+    Error = -1,
+    Light = 0,
+    Medium = 1,
+    Heavy = 2
+};
+
 public enum PlayerNum
 {
-    player1,
-    player2
-}
+    Player1,
+    Player2
+};
