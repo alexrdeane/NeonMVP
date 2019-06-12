@@ -5,43 +5,36 @@ using UnityEngine.Events;
 public class Player : MonoBehaviour
 {
     #region movementVariables
-    public KeyCode forwardKey;
-    public KeyCode backKey;
     public PlayerNum playerNum;
-
-    private Vector3 moveDirection;
-    public CharacterController characterController;
-    private float speed = 1f, gravity = 20f;
-
+    private string horizontalButton;
     public Transform player;
     public Transform player2;
+    public CharacterController characterController;
+
+    private float speed = 1f, gravity = 20f;
+    private Vector3 moveDirection;
     #endregion
 
     #region combatVariables
-
-    public string horizontalButton;
-    public string lightAttackButton;
-    public string mediumAttackButton;
-    public string heavyAttackButton;
-
+    private string lightAttackButton;
+    private string mediumAttackButton;
+    private string heavyAttackButton;
     public Attack lightAttack;
     public Attack mediumAttack;
     public Attack heavyAttack;
 
     public List<Combo> combos;
-    public float maxComboLeeway = 0.2f;
-    private float comboLeeway = 0;
-
     public Animator anim;
+    public Collider[] hurtBoxes;
+
+    private float maxComboLeeway = 0.2f;
+    private float comboLeeway = 0;
     private Attack currentAttack = null;
     private Attack prevAttack = null;
     private float attackTimer = 0;
     private float comboTimer = 0;
-    //List<int> currentCombos = new List<int>();
     private int currentCombo = -1; // -1 Represents no combo
-    public bool skip = false;
-
-    public Collider[] hurtBoxes;
+    private bool skip = false;
     #endregion
 
     void Start()
@@ -131,30 +124,7 @@ public class Player : MonoBehaviour
                 anim.SetBool("isBack", false);
             }
         }
-        /*
-        else if (playerNum == PlayerNum.Player2)
-        {
 
-        }
-
-        if (Input.GetButton("Horizontal"))
-        {
-            anim.SetBool("isBack", true);
-        }
-        else
-        {
-            anim.SetBool("isBack", false);
-        }
-
-        if (Input.GetKey(forwardKey))
-        {
-            anim.SetBool("isWalking", true);
-        }
-        else
-        {
-            anim.SetBool("isWalking", false);
-        }
-        */
         if (attackTimer >= 1.25f)
         {
             hurtBoxes[0].enabled = true;

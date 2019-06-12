@@ -1615,16 +1615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adeda658707eef42bc8c701eaee1067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardKey: 100
-  backKey: 97
   playerNum: 0
-  characterController: {fileID: 209895844}
   player: {fileID: 210066879}
   player2: {fileID: 736952798}
-  horizontalButton: 
-  lightAttackButton: 
-  mediumAttackButton: 
-  heavyAttackButton: 
+  characterController: {fileID: 209895844}
   lightAttack:
     length: 0.625
     type: 0
@@ -1635,8 +1629,8 @@ MonoBehaviour:
     length: 1.792
     type: 2
   combos:
-  - name: Punch
-    length: 0.7
+  - name: Punch Combo
+    length: 0.75
     attacks:
     - length: 0.625
       type: 0
@@ -1649,9 +1643,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  maxComboLeeway: 0.2
   anim: {fileID: 202617813}
-  skip: 0
   hurtBoxes:
   - {fileID: 538760348}
   - {fileID: 7632115}
@@ -3885,16 +3877,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4adeda658707eef42bc8c701eaee1067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardKey: 276
-  backKey: 275
   playerNum: 1
-  characterController: {fileID: 736952796}
   player: {fileID: 210066879}
   player2: {fileID: 736952798}
-  horizontalButton: 
-  lightAttackButton: 
-  mediumAttackButton: 
-  heavyAttackButton: 
+  characterController: {fileID: 736952796}
   lightAttack:
     length: 0.625
     type: 0
@@ -3919,9 +3905,7 @@ MonoBehaviour:
         m_Calls: []
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-  maxComboLeeway: 0.2
   anim: {fileID: 736952797}
-  skip: 0
   hurtBoxes:
   - {fileID: 1537795884}
   - {fileID: 123538447}
