@@ -95,7 +95,49 @@ public class Player : MonoBehaviour
         characterController.Move(moveDirection * Time.deltaTime);
 
         //movement controls for player
-        if (Input.GetKey(backKey))
+        if (playerNum == PlayerNum.Player1)
+        {
+            if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") < 0)
+            {
+                anim.SetBool("isBack", true);
+                anim.SetBool("isWalking", false);
+            }
+            else if (Input.GetButton("Horizontal") && Input.GetAxisRaw("Horizontal") > 0)
+            {
+                anim.SetBool("isWalking", true);
+                anim.SetBool("isBack", false);
+            }
+            else
+            {
+                anim.SetBool("isWalking", false);
+                anim.SetBool("isBack", false);
+            }
+        }
+        else if (playerNum == PlayerNum.Player2)
+        {
+            if (Input.GetButton("Horizontal2") && Input.GetAxisRaw("Horizontal2") < 0)
+            {
+                anim.SetBool("isBack", true);
+                anim.SetBool("isWalking", false);
+            }
+            else if (Input.GetButton("Horizontal2") && Input.GetAxisRaw("Horizontal2") > 0)
+            {
+                anim.SetBool("isWalking", true);
+                anim.SetBool("isBack", false);
+            }
+            else
+            {
+                anim.SetBool("isWalking", false);
+                anim.SetBool("isBack", false);
+            }
+        }
+        /*
+        else if (playerNum == PlayerNum.Player2)
+        {
+
+        }
+
+        if (Input.GetButton("Horizontal"))
         {
             anim.SetBool("isBack", true);
         }
@@ -112,7 +154,7 @@ public class Player : MonoBehaviour
         {
             anim.SetBool("isWalking", false);
         }
-
+        */
         if (attackTimer >= 1.25f)
         {
             hurtBoxes[0].enabled = true;
