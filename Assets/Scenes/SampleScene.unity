@@ -1621,9 +1621,10 @@ MonoBehaviour:
   characterController: {fileID: 209895844}
   player: {fileID: 210066879}
   player2: {fileID: 736952798}
-  lightKey: 106
-  mediumKey: 107
-  heavyKey: 108
+  horizontalButton: 
+  lightAttackButton: 
+  mediumAttackButton: 
+  heavyAttackButton: 
   lightAttack:
     length: 0.625
     type: 0
@@ -3890,18 +3891,19 @@ MonoBehaviour:
   characterController: {fileID: 736952796}
   player: {fileID: 210066879}
   player2: {fileID: 736952798}
-  lightKey: 257
-  mediumKey: 258
-  heavyKey: 259
+  horizontalButton: 
+  lightAttackButton: 
+  mediumAttackButton: 
+  heavyAttackButton: 
   lightAttack:
     length: 0.625
     type: 0
   mediumAttack:
     length: 1.083
-    type: 0
+    type: 1
   heavyAttack:
     length: 1.792
-    type: 0
+    type: 2
   combos:
   - name: Punch
     length: 0.7
@@ -3918,7 +3920,7 @@ MonoBehaviour:
       m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
   maxComboLeeway: 0.2
-  anim: {fileID: 202617813}
+  anim: {fileID: 736952797}
   skip: 0
   hurtBoxes:
   - {fileID: 1537795884}

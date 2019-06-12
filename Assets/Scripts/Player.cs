@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     private Vector3 moveDirection;
     public CharacterController characterController;
-    private float jumpSpeed = 5f;
     private float speed = 1f, gravity = 20f;
 
     public Transform player;
@@ -20,9 +19,11 @@ public class Player : MonoBehaviour
     #endregion
 
     #region combatVariables
-    public KeyCode lightKey;
-    public KeyCode mediumKey;
-    public KeyCode heavyKey;
+
+    public string horizontalButton;
+    public string lightAttackButton;
+    public string mediumAttackButton;
+    public string heavyAttackButton;
 
     public Attack lightAttack;
     public Attack mediumAttack;
@@ -46,6 +47,22 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+
+        if (playerNum == PlayerNum.Player1)
+        {
+            lightAttackButton = "LightAttack";
+            mediumAttackButton = "MediumAttack";
+            heavyAttackButton = "HeavyAttack";
+            horizontalButton = "Horizontal";
+        }
+        else if (playerNum == PlayerNum.Player2)
+        {
+            lightAttackButton = "LightAttack2";
+            mediumAttackButton = "MediumAttack2";
+            heavyAttackButton = "HeavyAttack2";
+            horizontalButton = "Horizontal2";
+        }
+
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
         PrimeCombos();
@@ -70,19 +87,13 @@ public class Player : MonoBehaviour
         bool notFlipped = transform.position.x < player2.position.x;
         transform.rotation = notFlipped ? Quaternion.Euler(0f, 90f, 0f) : Quaternion.Euler(0f, 270f, 0f);
         //when the key assigned for vertical movement in the input manager is pushed times speed and moveDirection together
-        moveDirection = new Vector3(0, 0, Input.GetAxis("Horizontal"));
+        moveDirection = new Vector3(0, 0, Input.GetAxis(horizontalButton));
         moveDirection = transform.TransformDirection(moveDirection);
         moveDirection *= speed;
         //gravity is constantly being added to the player
-        moveDirection.y -= notFlipped ? gravity : -gravity * Time.deltaTime;
+        moveDirection.y -= gravity * Time.deltaTime;
         //character speed is based on time
-        characterController.Move((transform.position.x < player2.position.x ? moveDirection : -moveDirection) * Time.deltaTime);
-
-        //input controls for jump
-        if (Input.GetButton("Jump"))
-        {
-            moveDirection.y = jumpSpeed;
-        }
+        characterController.Move(moveDirection * Time.deltaTime);
 
         //movement controls for player
         if (Input.GetKey(backKey))
@@ -103,7 +114,7 @@ public class Player : MonoBehaviour
             anim.SetBool("isWalking", false);
         }
 
-        if (attackTimer <= 0.5f)
+        if (attackTimer >= 1.25f)
         {
             hurtBoxes[0].enabled = true;
         }
@@ -112,12 +123,19 @@ public class Player : MonoBehaviour
         if (currentAttack == null)
         {
             Attack inputAttack = null;
-            if (Input.GetKeyDown(lightKey))
+            if (Input.GetButtonDown(lightAttackButton))
+            {
                 inputAttack = lightAttack;
-            if (Input.GetKeyDown(mediumKey))
+            }
+            if (Input.GetButtonDown(mediumAttackButton))
+            {
                 inputAttack = mediumAttack;
-            if (Input.GetKeyDown(heavyKey))
+            }
+            if (Input.GetButtonDown(heavyAttackButton))
+            {
+                hurtBoxes[0].enabled = false;
                 inputAttack = heavyAttack;
+            }
 
             if (inputAttack != null)
             {
@@ -166,53 +184,11 @@ public class Player : MonoBehaviour
             comboLeeway = 0;
         }
 
-        /*
-        //// Loop through all combos and reset them before detecting new combos
-        //List<int> remove = new List<int>();
-        //for (int i = 0; i < combos.Count; i++)
-        //{
-        //    Combo combo = combos[i];
-        //    if (combo.ContinueCombo(input))
-        //    {
-        //        comboLeeway = 0;
-        //    }
-        //    else
-        //    {
-        //        remove.Add(i);
-        //    }
-        //}
-        */
-
         // Skips a frame after a combo to reset the combo count to stop an extra action after a combo
         if (skip)
         {
             skip = false;
             return;
-        }
-
-
-        /*
-        ////if combo exists inputs will be used to preform the combo
-        //for (int i = 0; i < combos.Count; i++)
-        //{
-        //    if (currentCombos.Contains(i)) continue;
-        //    if (combos[i].ContinueCombo(input))
-        //    {
-        //        currentCombos.Add(i);
-        //        comboLeeway = 0;
-        //    }
-        //}
-        //foreach (int i in remove)
-        //{
-        //    combos.RemoveAt(i);
-        //}
-        */
-
-        // If a combo has been detected
-        if (currentCombo >= 0)
-        {
-            // Run the Attack (from before)
-            // Attack(currentAttack);
         }
     }
 
@@ -236,7 +212,6 @@ public class Player : MonoBehaviour
     {
         currentAttack = attack;
         anim.SetTrigger("Attack");
-
         // Convert enum to int (type-casting)
         anim.SetInteger("AttackType", (int)attack.type);
     }
@@ -245,21 +220,9 @@ public class Player : MonoBehaviour
     {
         comboTimer = combo.length;
         anim.SetTrigger("Combo");
-
         // Convert enum to int (type-casting)
         anim.SetInteger("ComboType", 0);
     }
-
-    //Attack GetAttackFromType(AttackType type)
-    //{
-    //    if (type == AttackType.Light)
-    //        return lightAttack;
-    //    if (type == AttackType.Medium)
-    //        return mediumAttack;
-    //    if (type == AttackType.Heavy)
-    //        hurtBoxes[0].enabled = false;
-    //    return heavyAttack;
-    //}
 }
 
 [System.Serializable]
@@ -285,7 +248,6 @@ public class Combo
         // If Combo's required attack matches the current input attack
         if (attacks[currentAttackIndex].type == currentAttack.type)
         {
-            // 
             currentAttackIndex++;
             if (currentAttackIndex >= attacks.Count)
             {
