@@ -23,17 +23,11 @@ public class Player : MonoBehaviour
     public Attack mediumAttack;
     public Attack heavyAttack;
 
-    public List<Combo> combos;
     public Animator anim;
     public Collider[] hurtBoxes;
 
-    private float maxComboLeeway = 0.2f;
-    private float comboLeeway = 0;
     private Attack currentAttack = null;
-    private Attack prevAttack = null;
     private float attackTimer = 0;
-    private float comboTimer = 0;
-    private int currentCombo = -1; // -1 Represents no combo
     private bool skip = false;
     #endregion
 
@@ -57,21 +51,6 @@ public class Player : MonoBehaviour
 
         anim = GetComponent<Animator>();
         characterController = GetComponent<CharacterController>();
-        PrimeCombos();
-    }
-
-    void PrimeCombos()
-    {
-        // Loop through all combos
-        foreach (var combo in combos)
-        {
-            combo.onInputted.AddListener(() =>
-            {
-                skip = true;
-                Combo(combo);
-                ResetCombos();
-            });
-        }
     }
 
     void Update()
@@ -153,18 +132,8 @@ public class Player : MonoBehaviour
                 Attack(inputAttack);
                 attackTimer = 0f;
 
-                // Loop through all created combos
-                foreach (var combo in combos)
-                {
-                    // If input attack maches the combo's required attack
-                    if (combo.ContinueCombo(currentAttack))
-                    {
-                        // Reset timer
-                        comboLeeway = 0;
-                    }
-                }
             }
-            return;
+
         }
         else
         {
@@ -176,45 +145,11 @@ public class Player : MonoBehaviour
             }
         }
 
-        prevAttack = currentAttack;
-
-        // If a current combo has been detected
-        if (currentCombo >= 0)
-        {
-            // Increase combo leeway timer
-            comboLeeway += Time.deltaTime;
-            // If combo leeway reaches max combo leeway
-            if (comboLeeway >= maxComboLeeway)
-            {
-                // Reset the combos
-                ResetCombos();
-            }
-        }
-        else
-        {
-            comboLeeway = 0;
-        }
-
         // Skips a frame after a combo to reset the combo count to stop an extra action after a combo
         if (skip)
         {
             skip = false;
             return;
-        }
-    }
-
-    //after a combo is pressed it removes it from active
-    void ResetCombos()
-    {
-        //resets the leeway timer when a combo is attempted
-        comboLeeway = 0;
-        attackTimer = 0;
-
-        // Loop through all the combos
-        foreach (var combo in combos)
-        {
-            // Reset each combo
-            combo.ResetCombo();
         }
     }
 
@@ -226,14 +161,6 @@ public class Player : MonoBehaviour
         // Convert enum to int (type-casting)
         anim.SetInteger("AttackType", (int)attack.type);
     }
-
-    void Combo(Combo combo)
-    {
-        comboTimer = combo.length;
-        anim.SetTrigger("Combo");
-        // Convert enum to int (type-casting)
-        anim.SetInteger("ComboType", 0);
-    }
 }
 
 [System.Serializable]
@@ -242,48 +169,6 @@ public class Attack
     //name of animation and time of animation so that  the animator can find it automatically
     public float length;
     public AttackType type;
-}
-
-[System.Serializable]
-public class Combo
-{
-    public string name;
-    public float length = 0.7f;
-    public List<Attack> attacks;
-    public UnityEvent onInputted;
-    private int currentAttackIndex = 0;
-
-    //continue combo if correctly inputted
-    public bool ContinueCombo(Attack currentAttack)
-    {
-        // If Combo's required attack matches the current input attack
-        if (attacks[currentAttackIndex].type == currentAttack.type)
-        {
-            currentAttackIndex++;
-            if (currentAttackIndex >= attacks.Count)
-            {
-                onInputted.Invoke();
-                currentAttackIndex = 0;
-            }
-            return true;
-        }
-        else
-        {
-            currentAttackIndex = 0;
-            return false;
-        }
-    }
-    public AttackType CurrentComboInput()
-    {
-        if (currentAttackIndex >= attacks.Count) return AttackType.Error;
-        return attacks[currentAttackIndex].type;
-    }
-
-    //resets input of current input after a combo is completed
-    public void ResetCombo()
-    {
-        currentAttackIndex = 0;
-    }
 }
 
 //enum of attack types
