@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+[RequireComponent(typeof(Player))]
 public class HealthBar : MonoBehaviour
 {
     [Header("Reference to health")]
@@ -25,12 +26,25 @@ public class HealthBar : MonoBehaviour
     // Reference to Fill
     public Image healthFill2;
 
+    private Player currentPlayer;
+
+    private bool isPunchPressed = false;
+
+    public bool canPunch;
+
+    private void Start()
+    {
+        currentPlayer = GetComponent<Player>();
+    }
+
     void Update()
     {
         healthSlider.value = Mathf.Clamp01(curHealth / maxHealth);
         healthSlider2.value = Mathf.Clamp01(curHealth2 / maxHealth2);
         ManageHealthBar();
         ManageHealthBar2();
+
+        isPunchPressed = Input.GetButtonDown("LightAttack2");
     }
 
     void ManageHealthBar()
@@ -64,13 +78,26 @@ public class HealthBar : MonoBehaviour
             healthFill2.enabled = enabled;
         }
     }
-
-    void OnTriggerEnter(Collider col)
+    
+    void OnTriggerStay(Collider col)
     {
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("LightAttack") != 0))
+        // What is the thing we hit
+        Player otherPlayer = col.GetComponent<Player>();
+        // If the thing is a Player AND not my Player
+        if (otherPlayer != null && !otherPlayer.Equals(currentPlayer))
         {
-            curHealth2 -= 10;
+            if (isPunchPressed && canPunch == true)
+            {
+                curHealth -= 10;
+                canPunch = false;
+            }
+            else
+            {
+                return;
+            }
+            
         }
+        /*
         if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack") != 0))
         {
             curHealth2 -= 20;
@@ -79,13 +106,11 @@ public class HealthBar : MonoBehaviour
         {
             curHealth2 -= 30;
         }
-
-
-
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("LightAttack2") != 0))
+        if (col.gameObject.tag == "HurtBox" && col.gameObject.tag == "LightAttack" && (Input.GetAxis("LightAttack") != 0))
         {
             curHealth -= 10;
         }
+        
         if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack2") != 0))
         {
             curHealth -= 20;
@@ -94,6 +119,7 @@ public class HealthBar : MonoBehaviour
         {
             curHealth -= 30;
         }
+        */
     }
 
     void LoadScene()

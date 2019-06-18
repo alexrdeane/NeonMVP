@@ -27,12 +27,14 @@ public class Player : MonoBehaviour
     public Collider[] hurtBoxes;
 
     private Attack currentAttack = null;
-    private float attackTimer = 0;
+    public float attackTimer = 0f;
     private bool skip = false;
+    public bool canPunch;
     #endregion
 
     void Start()
     {
+        canPunch = true;
 
         if (playerNum == PlayerNum.Player1)
         {
@@ -160,6 +162,7 @@ public class Player : MonoBehaviour
         anim.SetTrigger("Attack");
         // Convert enum to int (type-casting)
         anim.SetInteger("AttackType", (int)attack.type);
+        canPunch = false;
     }
 }
 

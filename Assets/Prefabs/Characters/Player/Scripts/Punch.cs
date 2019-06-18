@@ -1,26 +1,48 @@
-﻿/*using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Punch : MonoBehaviour
 {
-    public CapsuleCollider punchCol;
-    void PunchActivate()
-    {
-        punchCol.enabled = true;
-    }
+    public HealthBar health;
+    public float curHealth;
 
-    void PunchDeactivate()
+    private void Awake()
     {
-        punchCol.enabled = false;
+        curHealth = health.curHealth;
     }
-
-    public void OnTriggerEnter(Collider other)
+ 
+    void OnTriggerStay(Collider col)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (col.gameObject.tag == "HurtBox")
         {
-
+            if (Input.GetAxis("LightAttack2") != 0)
+            {
+                curHealth -= 10;
+            }
         }
+        /*
+        if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack") != 0))
+        {
+            curHealth2 -= 20;
+        }
+        if (col.gameObject.tag == "Player" && (Input.GetAxis("HeavyAttack") != 0))
+        {
+            curHealth2 -= 30;
+        }
+        if (col.gameObject.tag == "HurtBox" && col.gameObject.tag == "LightAttack" && (Input.GetAxis("LightAttack") != 0))
+        {
+            curHealth -= 10;
+        }
+        
+        if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack2") != 0))
+        {
+            curHealth -= 20;
+        }
+        if (col.gameObject.tag == "Player" && (Input.GetAxis("HeavyAttack2") != 0))
+        {
+            curHealth -= 30;
+        }
+        */
     }
 }
-*/
