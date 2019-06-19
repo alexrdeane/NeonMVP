@@ -4,47 +4,57 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-[RequireComponent(typeof(Player))]
 public class HealthBar : MonoBehaviour
 {
     [Header("Reference to health")]
     // Player1 maximum health
     public float maxHealth = 100;
-    // Player2 maximum health
-    public float maxHealth2 = 100;
     // Player1 current health
     public float curHealth = 100;
     // Player2 current health
-    public float curHealth2 = 100;
     [Header("Reference to UI elements")]
     // Reference to Slider
     public Slider healthSlider;
     // Reference to Fill
     public Image healthFill;
-    // Reference to Slider
-    public Slider healthSlider2;
-    // Reference to Fill
-    public Image healthFill2;
 
-    private Player currentPlayer;
+    public Player currentPlayer;
+    public string attackLightInput;
+    public string attackMediumInput;
+    public string attackHeavyInput;
 
-    private bool isPunchPressed = false;
+    public float lightTimer = 2;
+    public float mediumTimer = 2;
+    public float heavyTimer = 2;
+    public bool canAttack;
 
-    public bool canPunch;
-
-    private void Start()
-    {
-        currentPlayer = GetComponent<Player>();
-    }
-
+    private bool isLightPressed = false;
+    private bool isMediumPressed = false;
+    private bool isHeavyPressed = false;
+    public GameObject winText;
+    public GameObject player;
+    
     void Update()
     {
+        lightTimer += Time.deltaTime;
+        mediumTimer += Time.deltaTime;
+        heavyTimer += Time.deltaTime;
         healthSlider.value = Mathf.Clamp01(curHealth / maxHealth);
-        healthSlider2.value = Mathf.Clamp01(curHealth2 / maxHealth2);
         ManageHealthBar();
-        ManageHealthBar2();
 
-        isPunchPressed = Input.GetButtonDown("LightAttack2");
+        isLightPressed = Input.GetButtonDown(attackLightInput);
+        isMediumPressed = Input.GetButtonDown(attackMediumInput);
+        isHeavyPressed = Input.GetButtonDown(attackHeavyInput);
+
+        if (lightTimer <= 0.7 && mediumTimer <= 1.1 && heavyTimer <= 1.9)
+        {
+            canAttack = false;
+        }
+        else if (lightTimer >= 0.7 && mediumTimer >= 1.1 && heavyTimer >= 1.9)
+        {
+            canAttack = true;
+        }
+
     }
 
     void ManageHealthBar()
@@ -52,30 +62,15 @@ public class HealthBar : MonoBehaviour
         if (curHealth <= 0 && healthFill.enabled)
         {
             Debug.Log("Dead");
+            winText.SetActive(true);
             healthFill.enabled = false;
-            //Destroy(gameObject);
+            player.SetActive(false);
             Invoke("LoadScene", 5);
         }
         else if (!healthFill.enabled && curHealth > 0)
         {
             Debug.Log("Revive");
             healthFill.enabled = enabled;
-        }
-    }
-
-    void ManageHealthBar2()
-    {
-        if (curHealth2 <= 0 && healthFill2.enabled)
-        {
-            Debug.Log("Dead");
-            healthFill2.enabled = false;
-            //Destroy(gameObject);
-            Invoke("LoadScene", 5);
-        }
-        else if (!healthFill2.enabled && curHealth2 > 0)
-        {
-            Debug.Log("Revive");
-            healthFill2.enabled = enabled;
         }
     }
     
@@ -86,40 +81,25 @@ public class HealthBar : MonoBehaviour
         // If the thing is a Player AND not my Player
         if (otherPlayer != null && !otherPlayer.Equals(currentPlayer))
         {
-            if (isPunchPressed && canPunch == true)
+            if (isLightPressed && canAttack == true)
             {
+                canAttack = false;
+                curHealth -= 5;
+                lightTimer = 0;
+            }
+            if (isMediumPressed && canAttack == true)
+            {
+                canAttack = false;
                 curHealth -= 10;
-                canPunch = false;
+                mediumTimer = 0;
             }
-            else
+            if (isHeavyPressed && canAttack == true)
             {
-                return;
+                canAttack = false;
+                curHealth -= 13;
+                heavyTimer = 0;
             }
-            
         }
-        /*
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack") != 0))
-        {
-            curHealth2 -= 20;
-        }
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("HeavyAttack") != 0))
-        {
-            curHealth2 -= 30;
-        }
-        if (col.gameObject.tag == "HurtBox" && col.gameObject.tag == "LightAttack" && (Input.GetAxis("LightAttack") != 0))
-        {
-            curHealth -= 10;
-        }
-        
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("MediumAttack2") != 0))
-        {
-            curHealth -= 20;
-        }
-        if (col.gameObject.tag == "Player" && (Input.GetAxis("HeavyAttack2") != 0))
-        {
-            curHealth -= 30;
-        }
-        */
     }
 
     void LoadScene()

@@ -218,7 +218,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4532095945757861468}
-  - component: {fileID: 4532095945757861469}
   m_Layer: 0
   m_Name: LegHurtBox
   m_TagString: Untagged
@@ -240,19 +239,6 @@ Transform:
   m_Father: {fileID: 4532095945858967781}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4532095945757861469
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4532095945757861470}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.48, z: 0.75}
-  m_Center: {x: 0, y: 0.28, z: 0.1}
 --- !u!1 &4532095945859331269
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,8 +251,6 @@ GameObject:
   - component: {fileID: 4532095945852028559}
   - component: {fileID: 4532095945153330045}
   - component: {fileID: 4532095945153330046}
-  - component: {fileID: 4667620251924712732}
-  - component: {fileID: 638702651}
   - component: {fileID: 1082412225886083931}
   m_Layer: 0
   m_Name: Player2
@@ -292,6 +276,7 @@ Transform:
   - {fileID: 4532095946805859766}
   - {fileID: 4532095945757861468}
   - {fileID: 8102629081377370685}
+  - {fileID: 70108763883381873}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -304,7 +289,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4532095945859331269}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Avatar: {fileID: 9000000, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Controller: {fileID: 9100000, guid: a5b36d50c2bfa1b4ea1a877fba4c4567, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -358,43 +343,8 @@ MonoBehaviour:
     length: 1.792
     type: 2
   anim: {fileID: 4532095945852028559}
-  hurtBoxes:
-  - {fileID: 4532095946805859767}
-  - {fileID: 4532095945757861469}
---- !u!114 &4667620251924712732
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4532095945859331269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1880b7bb85606ec49b3fa1b44ca2a4b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  maxHealth2: 100
-  curHealth: 100
-  curHealth2: 100
-  healthSlider: {fileID: 0}
-  healthFill: {fileID: 0}
-  healthSlider2: {fileID: 6448626633950874091}
-  healthFill2: {fileID: 5082721042338759204}
-  punch: {fileID: 0}
---- !u!65 &638702651
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4532095945859331269}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 2.3852026, z: 0.84870195}
-  m_Center: {x: -3.368063e-15, y: 0.6926019, z: 0.56735927}
+  hurtBoxes: []
+  attackTimer: 0
 --- !u!54 &1082412225886083931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -410,7 +360,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!1 &4532095945859331271
 GameObject:
   m_ObjectHideFlags: 0
@@ -2310,7 +2260,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300000, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Mesh: {fileID: 4300000, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Bones:
   - {fileID: 4532095945858967911}
   - {fileID: 4532095945858967787}
@@ -2442,7 +2392,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300002, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Mesh: {fileID: 4300002, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Bones:
   - {fileID: 4532095945858967911}
   - {fileID: 4532095945858967787}
@@ -2762,7 +2712,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4532095946805859766}
-  - component: {fileID: 4532095946805859767}
   m_Layer: 10
   m_Name: HurtBox
   m_TagString: HurtBox2
@@ -2784,19 +2733,100 @@ Transform:
   m_Father: {fileID: 4532095945858967781}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4532095946805859767
+--- !u!1 &5447850447536904033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 70108763883381873}
+  - component: {fileID: 60168459457742145}
+  - component: {fileID: 7783441899189775478}
+  - component: {fileID: 1546145461496766392}
+  m_Layer: 9
+  m_Name: Player2Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &70108763883381873
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447850447536904033}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.239, z: -0.132}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4532095945858967781}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &60168459457742145
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4532095946805859760}
+  m_GameObject: {fileID: 5447850447536904033}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 0.5}
-  m_Center: {x: -3.1225803e-16, y: 0.9, z: 0.022760194}
+  m_Size: {x: 1, y: 1.81, z: 0.46}
+  m_Center: {x: -3.368063e-15, y: 0.6926019, z: 0.56735927}
+--- !u!114 &7783441899189775478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447850447536904033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adeda658707eef42bc8c701eaee1067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNum: 0
+  player: {fileID: 0}
+  player2: {fileID: 0}
+  characterController: {fileID: 0}
+  lightAttack:
+    length: 0
+    type: 0
+  mediumAttack:
+    length: 0
+    type: 0
+  heavyAttack:
+    length: 0
+    type: 0
+  anim: {fileID: 0}
+  hurtBoxes: []
+  attackTimer: 0
+--- !u!114 &1546145461496766392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5447850447536904033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1880b7bb85606ec49b3fa1b44ca2a4b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  maxHealth2: 100
+  curHealth: 100
+  curHealth2: 100
+  healthSlider: {fileID: 0}
+  healthFill: {fileID: 0}
+  healthSlider2: {fileID: 6448626633950874091}
+  healthFill2: {fileID: 5082721042338759204}
 --- !u!1 &6927494358725749985
 GameObject:
   m_ObjectHideFlags: 0

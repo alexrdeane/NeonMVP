@@ -186,6 +186,100 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!1 &1285404443323140910
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6802845469021145122}
+  - component: {fileID: 2231438428591252710}
+  - component: {fileID: 25798402735181619}
+  - component: {fileID: 1536541415340430174}
+  m_Layer: 9
+  m_Name: Player1Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6802845469021145122
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285404443323140910}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0.239, z: -0.124}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1821056144833017396}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2231438428591252710
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285404443323140910}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1.81, z: 0.46}
+  m_Center: {x: -3.368063e-15, y: 0.6926019, z: 0.56735927}
+--- !u!114 &25798402735181619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285404443323140910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4adeda658707eef42bc8c701eaee1067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerNum: 0
+  player: {fileID: 0}
+  player2: {fileID: 0}
+  characterController: {fileID: 0}
+  lightAttack:
+    length: 0
+    type: 0
+  mediumAttack:
+    length: 0
+    type: 0
+  heavyAttack:
+    length: 0
+    type: 0
+  anim: {fileID: 0}
+  hurtBoxes: []
+  attackTimer: 0
+--- !u!114 &1536541415340430174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285404443323140910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1880b7bb85606ec49b3fa1b44ca2a4b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  maxHealth2: 100
+  curHealth: 100
+  curHealth2: 100
+  healthSlider: {fileID: 8615896171901638433}
+  healthFill: {fileID: 6657403566839765751}
+  healthSlider2: {fileID: 0}
+  healthFill2: {fileID: 0}
 --- !u!1 &1551648024223005730
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,7 +289,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6499792601329205831}
-  - component: {fileID: 3086275670645657738}
   m_Layer: 0
   m_Name: LegHurtBox
   m_TagString: Untagged
@@ -217,19 +310,6 @@ Transform:
   m_Father: {fileID: 1821056144833017396}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &3086275670645657738
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551648024223005730}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 0.48, z: 0.75}
-  m_Center: {x: 0, y: 0.28, z: 0.1}
 --- !u!1 &1821056144833505812
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,8 +322,6 @@ GameObject:
   - component: {fileID: 1821056144823982174}
   - component: {fileID: 1821056144108378328}
   - component: {fileID: 1821056144108378329}
-  - component: {fileID: 7044382690093819928}
-  - component: {fileID: 1890763090}
   - component: {fileID: 1890763091}
   m_Layer: 9
   m_Name: Player1
@@ -269,6 +347,7 @@ Transform:
   - {fileID: 4074801817055024908}
   - {fileID: 6499792601329205831}
   - {fileID: 4701091488804846384}
+  - {fileID: 6802845469021145122}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
@@ -281,7 +360,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1821056144833505812}
   m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Avatar: {fileID: 9000000, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Controller: {fileID: 9100000, guid: a5b36d50c2bfa1b4ea1a877fba4c4567, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
@@ -335,43 +414,8 @@ MonoBehaviour:
     length: 1.792
     type: 2
   anim: {fileID: 1821056144823982174}
-  hurtBoxes:
-  - {fileID: 7120637918486273506}
-  - {fileID: 3086275670645657738}
---- !u!114 &7044382690093819928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821056144833505812}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1880b7bb85606ec49b3fa1b44ca2a4b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  maxHealth2: 100
-  curHealth: 100
-  curHealth2: 100
-  healthSlider: {fileID: 8615896171901638433}
-  healthFill: {fileID: 6657403566839765751}
-  healthSlider2: {fileID: 0}
-  healthFill2: {fileID: 0}
-  punch: {fileID: 0}
---- !u!65 &1890763090
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1821056144833505812}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 2.3852026, z: 0.84870195}
-  m_Center: {x: -3.368063e-15, y: 0.6926019, z: 0.56735927}
+  hurtBoxes: []
+  attackTimer: 0
 --- !u!54 &1890763091
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -387,7 +431,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!1 &1821056144833505814
 GameObject:
   m_ObjectHideFlags: 0
@@ -1549,7 +1593,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300000, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Mesh: {fileID: 4300000, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Bones:
   - {fileID: 1821056144833017782}
   - {fileID: 1821056144833017402}
@@ -1681,7 +1725,7 @@ SkinnedMeshRenderer:
   m_Quality: 0
   m_UpdateWhenOffscreen: 0
   m_SkinnedMotionVectors: 1
-  m_Mesh: {fileID: 4300002, guid: 1db758d5a5d364f42a09a942b4426187, type: 3}
+  m_Mesh: {fileID: 4300002, guid: ec063e1a31b4529458c9da129bd5286d, type: 3}
   m_Bones:
   - {fileID: 1821056144833017782}
   - {fileID: 1821056144833017402}
@@ -2839,7 +2883,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4074801817055024908}
-  - component: {fileID: 7120637918486273506}
   m_Layer: 12
   m_Name: HurtBox
   m_TagString: HurtBox
@@ -2861,19 +2904,6 @@ Transform:
   m_Father: {fileID: 1821056144833017396}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &7120637918486273506
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2567717651937134637}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 0.5}
-  m_Center: {x: -1.7412705e-16, y: 0.9, z: -0.027409928}
 --- !u!1 &3288117833626449226
 GameObject:
   m_ObjectHideFlags: 0

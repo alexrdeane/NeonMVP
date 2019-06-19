@@ -24,18 +24,14 @@ public class Player : MonoBehaviour
     public Attack heavyAttack;
 
     public Animator anim;
-    public Collider[] hurtBoxes;
 
     private Attack currentAttack = null;
     public float attackTimer = 0f;
     private bool skip = false;
-    public bool canPunch;
     #endregion
 
     void Start()
     {
-        canPunch = true;
-
         if (playerNum == PlayerNum.Player1)
         {
             lightAttackButton = "LightAttack";
@@ -106,11 +102,6 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (attackTimer >= 1.25f)
-        {
-            hurtBoxes[0].enabled = true;
-        }
-
         // If there isn't currently an attack running
         if (currentAttack == null)
         {
@@ -125,7 +116,6 @@ public class Player : MonoBehaviour
             }
             if (Input.GetButtonDown(heavyAttackButton))
             {
-                hurtBoxes[0].enabled = false;
                 inputAttack = heavyAttack;
             }
 
@@ -162,7 +152,6 @@ public class Player : MonoBehaviour
         anim.SetTrigger("Attack");
         // Convert enum to int (type-casting)
         anim.SetInteger("AttackType", (int)attack.type);
-        canPunch = false;
     }
 }
 
